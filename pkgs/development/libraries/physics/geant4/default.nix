@@ -120,7 +120,7 @@ let
 
       enableParallelBuilding = true;
       buildPhase = ''
-        make G4EMLOW G4NDL G4NEUTRONXS G4PII G4SAIDDATA PhotonEvaporation RadioactiveDecay RealSurface
+        make G4EMLOW G4NDL G4NEUTRONXS G4PII G4SAIDDATA G4ABLA G4ENSDFSTATE PhotonEvaporation RadioactiveDecay RealSurface
       '';
 
       installPhase = ''
@@ -146,5 +146,9 @@ in {
     inherit (fetchGeant4.v10_0_2) version src;
     multiThreadingCapable = true;
   };
-} 
- 
+
+  v10_4_1 = buildGeant4 {
+    inherit (fetchGeant4.v10_4_1) version src;
+    multiThreadingCapable = true;
+  };
+}
