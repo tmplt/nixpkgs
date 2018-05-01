@@ -74,6 +74,7 @@ let
         -DGEANT4_USE_SYSTEM_CLHEP=${if clhep != null then "ON" else "OFF"}
         -DGEANT4_USE_SYSTEM_EXPAT=${if expat != null then "ON" else "OFF"}
         -DGEANT4_USE_SYSTEM_ZLIB=${if zlib != null then "ON" else "OFF"}
+        -DGEANT4_BUILD_CXXSTD=14
       '';
 
       g4data = installData {
