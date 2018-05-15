@@ -2,7 +2,7 @@
 , libsndfile, portaudio, libX11, graphicsmagick, pcre, pkgconfig, libGLU_combined, fltk
 , fftw, fftwSinglePrec, zlib, curl, qrupdate, openblas, arpack, libwebp
 , qt ? null, qscintilla ? null, ghostscript ? null, llvm ? null, hdf5 ? null,glpk ? null
-, suitesparse ? null, gnuplot ? null, jdk ? null, python ? null, overridePlatforms ? null
+, suitesparse ? null, gnuplot ? null, gl2ps ? null, jdk ? null, python ? null, overridePlatforms ? null
 }:
 
 let
@@ -37,6 +37,7 @@ stdenv.mkDerivation rec {
     ++ (stdenv.lib.optional (suitesparse != null) suitesparse)
     ++ (stdenv.lib.optional (jdk != null) jdk)
     ++ (stdenv.lib.optional (gnuplot != null) gnuplot)
+    ++ (stdenv.lib.optional (gl2ps != null) gl2ps)
     ++ (stdenv.lib.optional (python != null) python)
     ++ (stdenv.lib.optionals (!stdenv.isDarwin) [ libGLU_combined libX11 ])
     ;
