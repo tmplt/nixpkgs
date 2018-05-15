@@ -8992,6 +8992,8 @@ with pkgs;
 
   fam = gamin;
 
+  gl2ps = callPackage ../development/libraries/gl2ps { };
+
   gamin = callPackage ../development/libraries/gamin { };
 
   ganv = callPackage ../development/libraries/ganv { };
