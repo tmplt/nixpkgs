@@ -7,14 +7,14 @@
 }:
 
 llvmPackages.stdenv.mkDerivation rec {
-  version = "unstable-2018-01-11";
+  version = "unstable-2018-12-02";
   name = "pbpst-${version}";
 
   src = fetchFromGitHub {
     owner = "HalosGhost";
     repo = "pbpst";
-    rev = "ecbe08a0b72a6e4212f09fc6cf52a73506992346";
-    sha256 = "0dwhmw1dg4hg75nlvk5kmvv3slz2n3b9x65q4ig16agwqfsp4mdm";
+    rev = "572df1a5009b09fe627330f0c92ddc7631eeb7ce";
+    sha256 = "11sldlldw94qipcry7r4bz0ryx40w8ls4x5lg5w24viy7q6cc4p1";
   };
 
   nativeBuildInputs = [
@@ -30,8 +30,8 @@ llvmPackages.stdenv.mkDerivation rec {
   patchPhase = ''
     patchShebangs ./configure
 
-    # Remove hardcoded check for libs in /usr/lib/
-    sed -e '64,67d' -i ./configure
+    # Remove dependency check
+    sed -e '131d' -i ./configure
   '';
 
   configureFlags = [
