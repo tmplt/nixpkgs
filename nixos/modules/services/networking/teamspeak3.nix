@@ -113,6 +113,8 @@ in
       after = [ "network.target" ];
       wantedBy = [ "multi-user.target" ];
 
+      environment.TS3SERVER_LICENCE = "accept";
+
       preStart = ''
         mkdir -p ${cfg.logPath}
         chown ${user}:${group} ${cfg.logPath}
