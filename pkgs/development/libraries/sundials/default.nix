@@ -10,6 +10,12 @@
   suitesparse,
   lapackSupport ? true,
   kluSupport ? true,
+  enableCvode ? true,
+  enableCvodes ? true,
+  enableArkode ? true,
+  enableIda ? true,
+  enableIdas ? true,
+  enableKinsol ? true,
 }:
 
 stdenv.mkDerivation rec {
@@ -71,7 +77,13 @@ stdenv.mkDerivation rec {
         # should be the default but we prefer to be explicit, for extra safety.
         if blas.isILP64 then "-DSUNDIALS_INDEX_SIZE=64" else "-DSUNDIALS_INDEX_SIZE=32"
       )
-    ];
+    ]
+    ++ lib.optional (!enableCvode) "-DBUILD_CVODE=OFF"
+    ++ lib.optional (!enableCvodes) "-DBUILD_CVODES=OFF"
+    ++ lib.optional (!enableArkode) "-DBUILD_ARKODE=OFF"
+    ++ lib.optional (!enableIda) "-DBUILD_IDA=OFF"
+    ++ lib.optional (!enableIdas) "-DBUILD_IDAS=OFF"
+    ++ lib.optional (!enableKinsol) "-DBUILD_KINSOL=OFF";
 
   doCheck = true;
   checkTarget = "test";
