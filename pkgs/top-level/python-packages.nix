@@ -5124,6 +5124,20 @@ self: super: with self; {
 
   flynt = callPackage ../development/python-modules/flynt { };
 
+  fmpy = callPackage ../development/python-modules/fmpy {
+    cvode = callPackage ../development/libraries/sundials rec {
+      lapackSupport = false;
+      lapack = { isILP64 = stdenv.hostPlatform.is64bit; };
+      blas = lapack;
+      kluSupport = false;
+      enableCvodes = false;
+      enableArkode = false;
+      enableIda = false;
+      enableIdas = false;
+      enableKinsol = false;
+    };
+  };
+
   fnllm = callPackage ../development/python-modules/fnllm { };
 
   fnv-hash-fast = callPackage ../development/python-modules/fnv-hash-fast { };
