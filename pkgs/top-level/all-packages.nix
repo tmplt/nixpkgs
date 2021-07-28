@@ -11185,6 +11185,8 @@ with pkgs;
 
   rover = callPackage ../development/tools/rover { };
 
+  rpclib = callPackage ../development/libraries/rpclib { };
+
   rshell = python3.pkgs.callPackage ../development/embedded/rshell { };
 
   schroedinger = callPackage ../development/libraries/schroedinger {
