@@ -82,6 +82,8 @@ in
         wants = [ "network-online.target" ];
         wantedBy = [ "multi-user.target" ];
 
+        path = with pkgs; [ nfs-utils ];
+
         preStart = ''
           # There should be only one autofs service managed by systemd, so this should be safe.
           rm -f /tmp/autofs-running
