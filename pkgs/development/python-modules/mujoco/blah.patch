@@ -1,0 +1,20 @@
+diff --git a/mujoco/egl/__init__.py b/mujoco/egl/__init__.py
+index d695ddc..aee6300 100644
+--- a/mujoco/egl/__init__.py
++++ b/mujoco/egl/__init__.py
+@@ -119,9 +119,12 @@ class GLContext:
+     """Frees resources associated with this context."""
+     if self._context:
+       current_context = EGL.eglGetCurrentContext()
++      release_thread = False
+       if current_context and self._context.address == current_context.address:
+         EGL.eglMakeCurrent(EGL_DISPLAY, EGL.EGL_NO_SURFACE,
+                            EGL.EGL_NO_SURFACE, EGL.EGL_NO_CONTEXT)
++        release_thread = True
+       EGL.eglDestroyContext(EGL_DISPLAY, self._context)
+-      EGL.eglReleaseThread()
++      if release_thread:
++        EGL.eglReleaseThread()
+     self._context = None
+
+   def __del__(self):

@@ -9,7 +9,9 @@
 , pkgs
 , pybind11
 , python
+, pytestCheckHook
 , setuptools
+, fetchurl
 }:
 
 buildPythonPackage rec {
@@ -33,6 +35,15 @@ buildPythonPackage rec {
   propagatedBuildInputs = [ glfw numpy ];
 
   pythonImportsCheck = [ "${pname}" ];
+
+  patches = [
+    # url = "https://github.com/saran-t/mujoco/commit/25749621593757d1aff9b9732c52c193374b7b40.patch";
+    # hash = "sha256-XXCmo07wKVYGZ0+g/95lgpML3OQa5Z2BtJL4+Rf+SGo=";
+    ./blah.patch
+    # ../../../../../../mujoco/mujoco/blah.patch
+  ];
+
+  # nativeCheckInputs = [ pytestCheckHook ];
 
   env.MUJOCO_PATH = "${mujoco}";
   env.MUJOCO_PLUGIN_PATH = "${mujoco}/lib";
