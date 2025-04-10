@@ -110,9 +110,9 @@ buildPythonPackage rec {
     ''
     + lib.optionalString stdenv.isLinux ''
       # The reproduction of build_remoting.py
-      cmakeFlags="-S native/remoting -B remoting/linux64 -D RPCLIB=${rpclib}"
-      cmakeConfigurePhase
-      cmake --build remoting/linux64 --config Release
+      #cmakeFlags="-S native/remoting -B remoting/linux64 -D RPCLIB=${rpclib}"
+      #cmakeConfigurePhase
+      #cmake --build remoting/linux64 --config Release
     '';
 
   # Some of tests are supposed to be failing in upstream, so we don't use
