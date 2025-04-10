@@ -112,7 +112,7 @@ buildPythonPackage rec {
   meta = with lib; {
     description = "A free Python library to simulate Functional Mock-up Units (FMUs)";
     homepage = "https://github.com/CATIA-Systems/FMPy";
-    license = with licenses; [ gpl3Only ];
+    license = with licenses; [ bsd2 ];
     maintainers = with maintainers; [ balodja tmplt ];
     platforms = [ "x86_64-linux" "x86_64-darwin" ];
   };
