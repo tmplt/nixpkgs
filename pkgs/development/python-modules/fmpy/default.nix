@@ -26,6 +26,8 @@
   pyside6,
   jinja2,
   flask,
+  dash,
+  dash-bootstrap-components,
 }:
 
 let
@@ -91,6 +93,8 @@ buildPythonPackage rec {
     pyside6
     jinja2
     flask
+    dash
+    dash-bootstrap-components
   ];
 
   dontUseCmakeConfigure = true;
