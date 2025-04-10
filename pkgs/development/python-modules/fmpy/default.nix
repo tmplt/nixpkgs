@@ -6,7 +6,7 @@
 , cvode
 , cmake
 , attrs
-, lark-parser
+, lark
 , lxml
 , rpclib
 , msgpack
@@ -38,7 +38,7 @@ buildPythonPackage rec {
 
   propagatedBuildInputs = [
     attrs
-    lark-parser
+    lark
     lxml
     msgpack
     numpy
