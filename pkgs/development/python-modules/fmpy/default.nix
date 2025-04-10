@@ -19,12 +19,13 @@
   dask,
   requests,
   matplotlib,
-  pyqt5,
   pyqtgraph,
   notebook,
   plotly,
   hatchling,
   pyside6,
+  jinja2,
+
 }:
 
 let
@@ -66,7 +67,8 @@ buildPythonPackage rec {
 
   nativeBuildInputs = [
     cmake
-    pyqt5
+    pyqtgraph
+    pyside6
     hatchling
   ];
 
@@ -81,13 +83,13 @@ buildPythonPackage rec {
     dask
     requests
     matplotlib
-    pyqt5
     pyqtgraph
     notebook
     plotly
     rpclib
     cvode
     pyside6
+    jinja2
   ];
 
   dontUseCmakeConfigure = true;
