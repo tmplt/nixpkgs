@@ -25,7 +25,7 @@
   hatchling,
   pyside6,
   jinja2,
-
+  flask,
 }:
 
 let
@@ -90,6 +90,7 @@ buildPythonPackage rec {
     cvode
     pyside6
     jinja2
+    flask
   ];
 
   dontUseCmakeConfigure = true;
