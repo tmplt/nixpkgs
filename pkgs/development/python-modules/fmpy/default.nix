@@ -1,40 +1,74 @@
-{ lib
-, stdenv
-, buildPythonPackage
-, fetchFromGitHub
-, pythonOlder
-, cvode
-, cmake
-, attrs
-, lark
-, lxml
-, rpclib
-, msgpack
-, numpy
-, scipy
-, pytz
-, dask
-, requests
-, matplotlib
-, pyqt5
-, pyqtgraph
-, notebook
-, plotly
+{
+  lib,
+  stdenv,
+  fetchurl,
+  buildPythonPackage,
+  fetchFromGitHub,
+  pythonOlder,
+  cmake,
+  sundials,
+  lapack,
+  attrs,
+  lark,
+  lxml,
+  rpclib,
+  msgpack,
+  numpy,
+  scipy,
+  pytz,
+  dask,
+  requests,
+  matplotlib,
+  pyqt5,
+  pyqtgraph,
+  notebook,
+  plotly,
+  hatchling,
+  pyside6,
 }:
+
+let
+  cvode =
+    (sundials.overrideAttrs (prev: {
+      # From native/build_cvode.py
+      version = "5.3.0";
+      src = fetchurl {
+        url = "https://github.com/LLNL/sundials/releases/download/v5.3.0/sundials-5.3.0.tar.gz";
+        sha256 = "88dff7e11a366853d8afd5de05bf197a8129a804d9d4461fb64297f1ef89bca7";
+      };
+    })).override
+      {
+        lapackSupport = false;
+        lapack.isILP64 = stdenv.hostPlatform.is64bit;
+        blas = lapack;
+        kluSupport = false;
+        enableCvodes = false;
+        enableArkode = false;
+        enableIda = false;
+        enableIdas = false;
+        enableKinsol = false;
+      };
+in
 
 buildPythonPackage rec {
   pname = "FMPy";
-  version = "0.3.1";
-  disabled = pythonOlder "3.5";
+  version = "a126f6d";
+  disabled = pythonOlder "3.10";
+  pyproject = true;
 
   src = fetchFromGitHub {
     owner = "CATIA-Systems";
     repo = "FMPy";
-    rev = "v${version}";
-    sha256 = "0ig08323id84nd9y272hyccky33my2nlhl44m41fxnkrg6xq7z3m";
+    rev = "a126f6da0180abbad656edac1e32c30a81556877";
+    fetchSubmodules = true;
+    hash = "sha256-m1Upi24dvrqnTAWr6X1vkUMczJBDn0etKbl8H2Dryp0=";
   };
 
-  nativeBuildInputs = [ cmake pyqt5 ];
+  nativeBuildInputs = [
+    cmake
+    pyqt5
+    hatchling
+  ];
 
   propagatedBuildInputs = [
     attrs
@@ -53,41 +87,30 @@ buildPythonPackage rec {
     plotly
     rpclib
     cvode
+    pyside6
   ];
 
   dontUseCmakeConfigure = true;
   dontUseCmakeBuildDir = true;
 
+  patches = [ ./0001-pyproject-comment-out-artifacts-not-built.patch ];
+
   postPatch = ''
-    substitute ${./libraries.py} ./fmpy/sundials/libraries.py \
+    substitute ${./libraries.py} ./src/fmpy/sundials/libraries.py \
         --subst-var-by cvode ${cvode}
   '';
 
   # Don't run upstream build scripts as they are too specialized.
-  # And don't build sundials because it is already built.
+  # cvode is already built, so we only need to build native binaries.
   preBuild =
-    let
-      platform = if stdenv.isDarwin then "darwin" else "linux";
-    in
     ''
-      # Don't reproduce the full build_cvode.py, just two items:
-      # 1. The cswrapper (Model Exchange -> Co-Simulation wrapper).
-      cmakeFlags="-DCVODE_INSTALL_DIR=${cvode} -S cswrapper -B cswrapper/build"
+      cmakeFlags="-S native/src -B native/src/build -D CVODE_INSTALL_DIR=${cvode}"
       cmakeConfigurePhase
-      cmake --build cswrapper/build --config Release
-
-      # 2. fmpy logger.
-      cmakeFlags="-S fmpy/logging -B fmpy/logging/build"
-      cmakeConfigurePhase
-      cmake --build fmpy/logging/build --config Release
-
-      # The reproduction of build_fmucontainer.py:
-      cmakeFlags="-S fmpy/fmucontainer -B fmpy/fmucontainer/${platform}"
-      cmakeConfigurePhase
-      cmake --build fmpy/fmucontainer/${platform} --config Release
-    '' + lib.optionalString stdenv.isLinux ''
+      cmake --build native/src/build --config Release
+    ''
+    + lib.optionalString stdenv.isLinux ''
       # The reproduction of build_remoting.py
-      cmakeFlags="-S remoting -B remoting/linux64 -D RPCLIB=${rpclib}"
+      cmakeFlags="-S native/remoting -B remoting/linux64 -D RPCLIB=${rpclib}"
       cmakeConfigurePhase
       cmake --build remoting/linux64 --config Release
     '';
@@ -110,10 +133,16 @@ buildPythonPackage rec {
   ];
 
   meta = with lib; {
-    description = "A free Python library to simulate Functional Mock-up Units (FMUs)";
+    description = "Simulate Functional Mockup Units (FMUs) in Python";
     homepage = "https://github.com/CATIA-Systems/FMPy";
     license = with licenses; [ bsd2 ];
-    maintainers = with maintainers; [ balodja tmplt ];
-    platforms = [ "x86_64-linux" "x86_64-darwin" ];
+    maintainers = with maintainers; [
+      balodja
+      tmplt
+    ];
+    platforms = [
+      "x86_64-linux"
+      "x86_64-darwin"
+    ];
   };
 }

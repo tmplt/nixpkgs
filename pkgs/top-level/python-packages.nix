@@ -5124,19 +5124,7 @@ self: super: with self; {
 
   flynt = callPackage ../development/python-modules/flynt { };
 
-  fmpy = callPackage ../development/python-modules/fmpy {
-    cvode = callPackage ../development/libraries/sundials rec {
-      lapackSupport = false;
-      lapack = { isILP64 = stdenv.hostPlatform.is64bit; };
-      blas = lapack;
-      kluSupport = false;
-      enableCvodes = false;
-      enableArkode = false;
-      enableIda = false;
-      enableIdas = false;
-      enableKinsol = false;
-    };
-  };
+  fmpy = callPackage ../development/python-modules/fmpy { };
 
   fnllm = callPackage ../development/python-modules/fnllm { };
 
